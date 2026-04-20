@@ -227,7 +227,7 @@ export default function FormBox<TFormData extends FieldValues = FieldValues>({
       case "editor":
         if (!isMounted) {
           return (
-            <div className="h-[300px] w-full rounded-sm animate-pulse bg-slate-50 flex items-center justify-center text-muted-foreground text-xs">
+            <div className="h-75 w-full rounded-sm animate-pulse bg-slate-50 flex items-center justify-center text-muted-foreground text-xs">
               Loading editor...
             </div>
           );
@@ -257,7 +257,7 @@ export default function FormBox<TFormData extends FieldValues = FieldValues>({
             withCountryCallingCode
             value={field.value as E164Number | undefined}
             onChange={field.onChange}
-            className={`p-[6px] text-sm border bg-inherit rounded-sm focus:outline-blue-500 focus:ring-blue-500 ${errors ? "border-red-500" : ""}`}
+            className={`p-1.5 text-sm border bg-inherit rounded-sm focus:outline-blue-500 focus:ring-blue-500 ${errors ? "border-red-500" : ""}`}
           />
         );
       default:

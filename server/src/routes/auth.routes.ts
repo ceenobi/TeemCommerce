@@ -1,6 +1,5 @@
 import { initServer } from "@ts-rest/express";
 import { authContract } from "../contract/auth.contract.js";
-import { SignUpSchema } from "../lib/schemaValidations.js";
 import { auth } from "../config/better-auth.js";
 import {
   createTsRestSuccess,
@@ -11,9 +10,9 @@ import tryCatchFn from "../lib/tryCatchFn.js";
 import { env } from "../config/keys.js";
 import { type User as BetterAuthUser } from "../config/better-auth.js";
 import logger from "../config/logger.js";
-import { validateFormData } from "../middleware/formValidate.js";
 import { generateVendorId } from "../lib/options.js";
 import { workflowClient } from "../workflows/client.js";
+import { strictLimiter } from "../middleware/rateLimit.middleware.js";
 
 const forwardAuthHeaders = (res: any, headers: Headers) => {
   const getSetCookie = (headers as any).getSetCookie?.bind(headers as any);
@@ -54,7 +53,7 @@ export const getAuthRouter = () => {
     },
     auth: {
       createUser: {
-        middleware: [validateFormData(SignUpSchema)],
+        middleware: [strictLimiter],
         handler: tryCatchFn(async ({ req, res }) => {
           const { email, name, password } = req.body;
           const authResponse = await auth.api.signUpEmail({
@@ -63,11 +62,13 @@ export const getAuthRouter = () => {
               email,
               password,
               vendorId: generateVendorId(),
+              callbackURL: `${env.clientUrl}/account/verify-email`,
             },
             headers: fromNodeHeaders(req.headers),
             returnHeaders: true,
             asResponse: true,
           });
+
           if (!authResponse.ok) {
             const errorData: any = await authResponse.json().catch(() => ({}));
             logger.error("Failed to register user:", errorData);

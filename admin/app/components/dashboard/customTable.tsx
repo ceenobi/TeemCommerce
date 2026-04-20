@@ -100,18 +100,15 @@ export default function CustomTable({
 
   return (
     <div
-      className={cn(
-        "border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-white/2 backdrop-blur-3xl overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none",
-        className,
-      )}
+      className={cn("border-t border-WhiteNeutral dark:border-WhiteNeutral/20 overflow-hidden", className)}
     >
       <Table>
-        <TableHeader className="bg-slate-50/50 dark:bg-white/5">
-          <TableRow className="hover:bg-transparent border-slate-200 dark:border-white/5">
+        <TableHeader>
+          <TableRow className="hover:bg-transparent border-WhiteNuetral">
             {columns.map((column) => (
               <TableHead
                 key={column.uid}
-                className="text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60 py-4"
+                className="text-[11px] font-bold capitalize tracking-[0.2em] text-CharcoalBlack dark:text-WhiteNeutral/50 py-4"
               >
                 {column.name}
               </TableHead>
@@ -124,7 +121,7 @@ export default function CustomTable({
               data.map((item, index) => (
                 <TableRow
                   key={item._id || index}
-                  className="border-slate-100 dark:border-white/5 transition-colors hover:bg-slate-50 dark:hover:bg-white/5 group"
+                  className="border-WhiteNuetral hover:bg-slate-50 dark:hover:bg-white/5 group"
                 >
                   {columns.map((column) => (
                     <TableCell

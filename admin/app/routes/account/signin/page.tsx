@@ -101,7 +101,7 @@ export default function Signin() {
                 type="submit"
                 loading={isSubmitting}
                 size="lg"
-                classname="w-full font-medium uppercase bg-BrightTealBlue py-[22px] hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
+                classname="w-full font-medium uppercase bg-BrightTealBlue py-5.5 hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
               />
               <div className="flex items-center gap-2">
                 <div className="w-full h-px bg-gray-200 dark:bg-gray-600" />{" "}

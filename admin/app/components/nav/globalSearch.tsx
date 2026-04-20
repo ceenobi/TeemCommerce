@@ -9,7 +9,7 @@ export default function GlobalSearch() {
       <Button
         variant="outline"
         onClick={() => setIsOpen(true)}
-        className="hidden md:flex h-9 w-52 justify-between text-muted-foreground hover:text-foreground"
+        className="hidden md:flex h-9 w-56 justify-between text-muted-foreground hover:text-foreground"
       >
         <div className="flex items-center gap-2">
           <Search className="h-4 w-4" />

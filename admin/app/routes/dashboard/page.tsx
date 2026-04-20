@@ -1,5 +1,5 @@
+import type { Route } from "./+types/page";
 import { PageSection, PageWrapper } from "~/components/ui/pageWrapper";
-import type { Route } from "./+types/home";
 import { getTimeOfDay } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import {
@@ -30,11 +30,11 @@ export default function Home() {
   return (
     <PageWrapper className="py-20 px-4 lg:px-8 space-y-8">
       <PageSection index={0} className="md:flex justify-between items-center">
-        <div>
-          <h1 className="font-bold uppercase text-BrightTealBlue text-sm tracking-widest">
+        <div className="text-CharcoalBlack dark:text-WhiteNeutral">
+          <h1 className="capitalize text-BrightTealBlue text-sm tracking-widest">
             overview
           </h1>
-          <h1 className="text-lg md:text-2xl font-bold text-foreground truncate uppercase tracking-tight lg:text-3xl">
+          <h1 className="text-[24px] font-medium truncate uppercase tracking-tight">
             {getTimeOfDay("Alex")}.
           </h1>
         </div>
@@ -42,15 +42,15 @@ export default function Home() {
           <Button
             variant="outline"
             size="lg"
-            className="py-[22px] bg-white/5 border backdrop-blur-3xl cursor-pointer hover:bg-white/10"
+            className="py-5 bg-white/5 border backdrop-blur-3xl cursor-pointer hover:bg-white/10 rounded-sm"
           >
             <Calendar size={18} className="mr-2" /> LAST 30 DAYS
           </Button>
           <Button
             size="lg"
-            className="bg-BrightTealBlue text-white py-[22px] cursor-pointer hover:bg-BrightTealBlue/90 shadow-lg shadow-BrightTealBlue/20"
+            className="rounded-sm bg-BrightTealBlue text-white py-5 cursor-pointer hover:bg-BrightTealBlue/90 capitalize"
           >
-            <Download size={18} className="mr-2" /> EXPORT REPORT
+            <Download size={18} className="mr-2" /> Export report
           </Button>
         </div>
       </PageSection>
@@ -90,15 +90,17 @@ export default function Home() {
       <div className="grid grid-cols-12 gap-4">
         <PageSection
           index={2}
-          className="col-span-12 md:col-span-8 border border-BrightTealBlue/20 p-4 dark:bg-DarkBlue/30 backdrop-blur-3xl"
+          className="col-span-12 md:col-span-8 rounded-sm border dark:border-WhiteNeutral/20"
         >
-          <div className="flex justify-between items-center uppercase ">
-            <h1 className="font-semibold">Recent orders</h1>
+          <div className="flex justify-between items-center my-4 px-2 py-2">
+            <h1 className="text-CharcoalBlack dark:text-WhiteNeutral/50 font-medium">
+              Recent orders
+            </h1>
             <Link
               to="/orders"
               className="text-sm hover:text-BrightTealBlue text-BrightTealBlue"
             >
-              VIEW ALL
+              View All
             </Link>
           </div>
           <div className="mt-4">
@@ -106,24 +108,26 @@ export default function Home() {
           </div>
         </PageSection>
         <PageSection index={3} className="col-span-12 md:col-span-4 space-y-6">
-          <div className="border border-BrightTealBlue dark:bg-DarkBlue/30 bg-slate-50 p-8 space-y-4 shadow-sm dark:shadow-none">
+          <div className="rounded-sm border border-BrightTealBlue dark:bg-DarkBlue/30 bg-slate-50 p-8 space-y-4 shadow-sm dark:shadow-none">
             <Rocket className="text-BrightTealBlue" size={30} />
             <div className="uppercase space-y-2">
-              <h1 className="font-bold text-2xl text-foreground dark:text-White">Grow your sales</h1>
+              <h1 className="font-bold text-2xl text-foreground dark:text-White">
+                Grow your sales
+              </h1>
               <p className="text-muted-foreground/80 text-xs leading-relaxed">
                 Launch marketing campaigns to reach more customers and increase
                 sales.
               </p>
-              <Button className="bg-BrightTealBlue text-white py-[22px] cursor-pointer hover:bg-BrightTealBlue/90 shadow-lg shadow-BrightTealBlue/20 uppercase w-full">
+              <Button className="bg-BrightTealBlue text-white py-5.5 cursor-pointer hover:bg-BrightTealBlue/90 shadow-lg shadow-BrightTealBlue/20 uppercase w-full">
                 Launch campaign
               </Button>
             </div>
           </div>
-          <div className="border border-slate-200 dark:border-BrightTealBlue/20 dark:bg-DarkBlue/30 bg-white/50 backdrop-blur-3xl p-8 space-y-4 shadow-sm dark:shadow-none">
+          <div className="rounded-sm border dark:border-BrightTealBlue/20 dark:bg-DarkBlue/30 bg-white/50 backdrop-blur-3xl p-8 space-y-4 shadow-sm dark:shadow-none">
             <h1 className="font-bold text-xl text-foreground dark:text-White uppercase">
               Quick actions
             </h1>
-            <div className="border border-slate-100 dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
+            <div className="rounded-sm border dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
               <Button size="lg" variant="outline" className="dark:bg-white/5">
                 <CirclePlus className="text-BrightTealBlue" />
               </Button>
@@ -136,7 +140,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="border border-slate-100 dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
+            <div className="rounded-sm border dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
               <Button size="lg" variant="outline" className="dark:bg-white/5">
                 <NotebookPen className="text-BrightTealBlue" />
               </Button>
@@ -150,7 +154,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="border border-slate-200 dark:border-BrightTealBlue/20 dark:bg-DarkBlue/30 bg-white/50 backdrop-blur-3xl p-8 space-y-4 shadow-sm dark:shadow-none">
+          <div className="rounded-sm border dark:border-BrightTealBlue/20 dark:bg-DarkBlue/30 bg-white/50 backdrop-blur-3xl p-8 space-y-4 shadow-sm dark:shadow-none">
             <div className="flex justify-between w-full">
               <h1 className="font-bold text-xl text-foreground dark:text-White uppercase">
                 stock alerts
@@ -164,7 +168,7 @@ export default function Home() {
                 URGENT
               </Badge>
             </div>
-            <div className="border border-slate-100 dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
+            <div className="rounded-sm border dark:border-BrightTealBlue/30 flex p-4 gap-6 items-center hover:bg-slate-50/80 dark:hover:bg-white/5 transition-colors">
               <div className="w-10 h-10 rounded-lg overflow-hidden border border-slate-200 dark:border-white/10">
                 <img
                   src="https://res.cloudinary.com/ceenobi/image/upload/v1761575472/Clinicare/avatars/orgjzwxdurpehb9ayxgf.webp"
@@ -173,11 +177,13 @@ export default function Home() {
                 />
               </div>
               <div className="uppercase">
-                <h1 className="font-bold text-xs text-foreground dark:text-White truncate">FLORAL DRESS</h1>
+                <h1 className="font-bold text-xs text-foreground dark:text-White truncate">
+                  FLORAL DRESS
+                </h1>
                 <p className="text-red-500 text-xs">Only 2 left in stock</p>
               </div>
             </div>
-            <Button className="bg-slate-900 dark:bg-DarkBlue text-white py-[22px] cursor-pointer hover:bg-slate-800 dark:hover:bg-DarkBlue/90 shadow-lg dark:shadow-DarkBlue/20 uppercase w-full">
+            <Button className="bg-slate-900 dark:bg-DarkBlue text-white py-5.5 cursor-pointer hover:bg-slate-800 dark:hover:bg-DarkBlue/90 shadow-lg dark:shadow-DarkBlue/20 uppercase w-full">
               resolve all alerts
             </Button>
           </div>

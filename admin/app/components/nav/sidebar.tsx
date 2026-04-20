@@ -43,24 +43,23 @@ function Sidebar({
   return (
     <aside
       className={cn(
-        `hidden lg:block bg-white/2 border border-white/10 backdrop-blur-3xl min-h-screen top-0 fixed z-50 transition-all duration-300 ease-in-out border-r shadow`,
-        isOpenSidebar ? "lg:w-[250px]" : "lg:w-[60px]",
+        `hidden lg:block bg-white dark:bg-CharcoalBlack border-r dark:border-WhiteNeutral/20 min-h-screen top-0 fixed z-50 transition-all duration-300 ease-in-out`,
+        isOpenSidebar ? "lg:w-62.5" : "lg:w-15",
       )}
     >
-      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-BrightTealBlue/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="relative">
         <div
           className={cn(
-            "flex items-center py-[14px] absolute top-0 z-10 w-full",
+            "flex items-center py-3.75 absolute top-0 z-10 w-full border-b dark:border-WhiteNeutral/20",
             isOpenSidebar ? "px-2" : "justify-center",
           )}
         >
-          <Logo isOpenSidebar={isOpenSidebar} classname="text-lg" />
+          <Logo isOpenSidebar={isOpenSidebar} classname="text-md" />
           <button
             onClick={toggleSidebar}
             className={cn(
-              "cursor-pointer transition-all duration-300 ease-in-out absolute top-[16px] translate-x-1/2 rounded-full border",
-              isOpenSidebar ? "right-0" : "right-[-3px]",
+              "cursor-pointer transition-all duration-300 ease-in-out absolute top-4 translate-x-1/2 rounded-full border",
+              isOpenSidebar ? "right-0" : "-right-0.75",
             )}
           >
             {isOpenSidebar ? (
@@ -81,11 +80,11 @@ function Sidebar({
                         to={child.href}
                         key={child.name}
                         className={({ isActive }) =>
-                          `tracking-widest transition-all duration-300 ease-in-out w-full p-2 flex items-center gap-2 text-sm font-medium ${
+                          `tracking-normal transition-all duration-300 ease-in-out w-full p-1.25 flex items-center gap-2 text-sm text-CharcoalBlack dark:text-WhiteNeutral ${
                             isActive ||
                             path.split("/")[1] === child.href.split("/")[1]
-                              ? "font-bold w-full border-l-4 border-0 border-BrightTealBlue bg-DarkNight/90 text-BrightTealBlue"
-                              : "hover:bg-DarkNight/30 hover:text-BrightTealBlue hover:tracking-[0.2em]"
+                              ? "w-full border-0 border-BrightTealBlue bg-DarkNight/10 dark:bg-DarkBlue text-BrightTealBlue"
+                              : "hover:bg-DarkNight/5 hover:dark:bg-DarkBlue/30 hover:text-BrightTealBlue hover:tracking-[0.2em]"
                           } ${isOpenSidebar ? "" : "justify-center"}`
                         }
                         viewTransition
@@ -97,9 +96,9 @@ function Sidebar({
                             <span
                               className={`flex items-center gap-2 cursor-pointer px-2`}
                             >
-                              <child.icon size={20} />
+                              <child.icon size={18} />
                               <span
-                                className={`text-sm cursor-pointer transition ease-in-out duration-300 ${isOpenSidebar ? "hidden md:block" : "hidden"}`}
+                                className={`cursor-pointer transition ease-in-out duration-300 ${isOpenSidebar ? "hidden md:block" : "hidden"}`}
                               >
                                 {child.name}
                               </span>
@@ -119,9 +118,9 @@ function Sidebar({
             ))}
           </div>
         </div>
-        <div className="absolute bottom-2 z-10 w-full p-2 space-y-2">
+        <div className="absolute bottom-2 z-10 w-full py-2 space-y-2">
           <Separator />
-          <div className="flex gap-2 items-center justify-center">
+          <div className="flex gap-2 items-center justify-center px-2">
             <Avatar>
               <AvatarImage src="https://github.com/shadcn.png" />
               <AvatarFallback>CN</AvatarFallback>

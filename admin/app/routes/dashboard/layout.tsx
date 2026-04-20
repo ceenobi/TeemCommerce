@@ -13,7 +13,7 @@ export default function DashboardLayout() {
         //userRole={user?.role as "member" | "admin" | "super_admin"}
       />
       <div
-        className={`transition-all ease-in-out duration-500 ${isOpenSidebar ? "lg:ml-[250px]" : "lg:ml-[60px]"}`}
+        className={`transition-all ease-in-out duration-500 ${isOpenSidebar ? "lg:ml-62.5" : "lg:ml-15"}`}
       >
         <Header isOpenSidebar={isOpenSidebar} />
         <Outlet />

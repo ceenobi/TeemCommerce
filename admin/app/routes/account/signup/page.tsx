@@ -9,19 +9,46 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { formFields } from "~/lib/constants";
-import { useFetcher, Form, Link } from "react-router";
+import { useFetcher, Form, Link, redirect } from "react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignupFormSchema } from "~/lib/schemaValidations";
 import FormBox from "~/components/ui/formBox";
 import ActionButton from "~/components/ui/actionButton";
 import { PageSection, PageWrapper } from "~/components/ui/pageWrapper";
+import { signUpWithEmail } from "~/routes/api/auth-route";
+import { toast } from "sonner";
+import { useEffect } from "react";
 
 export function meta({}: Route.MetaArgs) {
   return [
     { title: "Teem Commerce - Account Signup" },
     { name: "description", content: `Teem Commerce - Account Signup` },
   ];
+}
+
+export async function action({ request }: Route.ActionArgs) {
+  try {
+    const cookie = request.headers.get("Cookie") || "";
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData) as Record<string, string>;
+    const response = await signUpWithEmail({
+      validated: signUpSchema.parse(data),
+      cookie,
+    });
+    if (response.status === 201) {
+      return redirect("/account/verify-email");
+    }
+    return response;
+  } catch (error: any) {
+    return {
+      status: 500,
+      body: {
+        success: false,
+        message: error.message || "An unexpected error occurred",
+      },
+    };
+  }
 }
 
 export default function Signup() {
@@ -39,6 +66,28 @@ export default function Signup() {
     },
   });
   const fetcher = useFetcher();
+
+  useEffect(() => {
+    if (fetcher.data && fetcher.state === "idle") {
+      const { status, body } = fetcher.data as any;
+
+      if (status !== 201 && body) {
+        toast.error(body.message || "Something went wrong during signup");
+
+        if (body.details && Array.isArray(body.details)) {
+          body.details.forEach((err: any) => {
+            if (err.path) {
+              form.setError(err.path[0] as keyof SignupFormSchema, {
+                type: "manual",
+                message: err.message,
+              });
+            }
+          });
+        }
+      }
+    }
+  }, [fetcher.data, fetcher.state, form]);
+
   const isSubmitting = fetcher.state === "submitting";
 
   const showIcon = (name: string) => {
@@ -94,7 +143,7 @@ export default function Signup() {
               ))}
             </div>
           </div>
-          <div className="col-span-12 md:col-span-9 p-8 rounded-l-none h-auto items-center bg-white dark:bg-DarkBlue border">
+          <div className="col-span-12 md:col-span-9 p-8 rounded-l-none h-auto items-center bg-white dark:bg-CharcoalBlack border border-WhiteNuetral dark:border-BrightTealBlue/20">
             <div className="max-w-sm mx-auto space-y-4 flex flex-col justify-center h-full">
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold">Create Account</h1>
@@ -146,7 +195,7 @@ export default function Signup() {
                   type="submit"
                   loading={isSubmitting}
                   size="lg"
-                  classname="w-full font-medium uppercase bg-BrightTealBlue py-[22px] hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
+                  classname="w-full font-medium uppercase bg-BrightTealBlue py-5.5 hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
                 />
               </Form>
               <p className="text-center text-sm">

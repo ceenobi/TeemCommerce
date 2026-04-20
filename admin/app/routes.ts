@@ -13,6 +13,7 @@ export default [
       route("signin", "routes/account/signin/page.tsx"),
       route("reset-password", "routes/account/reset-password/page.tsx"),
       route("forgot-password", "routes/account/forgot-password/page.tsx"),
+      route("verify-email", "routes/account/verify-email/page.tsx"),
     ]),
   ]),
   layout("routes/dashboard/layout.tsx", [index("routes/dashboard/page.tsx")]),

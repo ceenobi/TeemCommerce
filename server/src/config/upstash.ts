@@ -33,4 +33,4 @@ export const createRatelimit = (
 export const generalRatelimit = createRatelimit(100, "60 s", "general");
 
 // Stricter ratelimiter for sensitive actions: 10 requests per 60 seconds
-export const strictRatelimit = createRatelimit(10, "60 s", "strict");
+export const strictRatelimit = createRatelimit(2, "60 s", "strict");

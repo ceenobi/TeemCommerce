@@ -263,12 +263,12 @@ export const sideBarLinks = [
 ];
 
 export const orderTableColumns = [
-  { name: "ORDER ID", uid: "orderId" },
-  { name: "CUSTOMER", uid: "customer" },
-  { name: "DATE", uid: "date" },
-  { name: "STATUS", uid: "status" },
-  { name: "AMOUNT", uid: "amount" },
-  { name: "ACTION", uid: "action" },
+  { name: "Order ID", uid: "orderId" },
+  { name: "Customer", uid: "customer" },
+  { name: "Date", uid: "date" },
+  { name: "Status", uid: "status" },
+  { name: "Amount", uid: "amount" },
+  { name: "Action", uid: "action" },
 ];
 
 export const orderData = [

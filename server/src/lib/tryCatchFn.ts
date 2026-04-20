@@ -3,7 +3,7 @@ import logger from "../config/logger.js";
 import { createTsRestError } from "./tsRestResponse.js";
 
 const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
-  return (async (...args: Parameters<T>) => {
+  return (async (...args: any[]) => {
     try {
       return await fn(...args);
     } catch (error: any) {
@@ -12,7 +12,7 @@ const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
         return createTsRestError(
           Number(error?.status) || 400,
           error?.body?.message || error?.message || "Request failed",
-          []
+          [],
         );
       }
       if (error.response?.status === 429) {
@@ -20,7 +20,7 @@ const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
         return createTsRestError(
           429,
           "Rate limit reached. Please try again in a few minutes.",
-          []
+          [],
         );
       }
       const errorMessage =
@@ -28,7 +28,8 @@ const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
       logger.error("Error response with message:", errorMessage);
       return createTsRestError(Number(error?.status) || 400, errorMessage, []);
     }
-  }) as T;
+  }) as unknown as T;
 };
 
 export default tryCatchFn;
+
