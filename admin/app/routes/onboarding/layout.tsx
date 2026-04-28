@@ -47,12 +47,12 @@ export default function OnboardingLayout() {
       <aside className="sticky top-0 h-auto lg:h-screen overflow-y-auto bg-muted/40 dark:bg-card p-5 lg:p-6 flex flex-row lg:flex-col gap-5 lg:gap-8 items-center lg:items-stretch justify-between lg:justify-start border-b lg:border-b-0 lg:border-r border-border z-30">
         {/* Brand */}
         <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <Tent className="text-BrightTealBlue" size={22} />
             <h2 className="text-base font-bold text-foreground tracking-tight">
               Teem Commerce
             </h2>
-          </div>
+          </Link>
           <span className="hidden lg:block text-[0.6875rem] font-medium uppercase tracking-widest text-muted-foreground">
             Onboarding Phase
           </span>
@@ -124,7 +124,7 @@ export default function OnboardingLayout() {
       </aside>
 
       {/* ─── Main Area ─── */}
-      <main className="overflow-y-auto p-6 lg:p-10 max-w-[960px]">
+      <main className="overflow-y-auto p-6 lg:p-10 max-w-full">
         <div className="flex justify-end mb-6">
           <ThemeToggle />
         </div>

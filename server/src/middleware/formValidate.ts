@@ -11,14 +11,15 @@ export const validateFormData =
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errorMessages = error.issues.map((issue) => ({
-          field: issue.path.join("."),
+        const details = error.issues.map((issue) => ({
           message: issue.message,
+          path: issue.path.map(String),
         }));
-        logger.error("Validation failed:", errorMessages);
+        logger.error("Validation failed:", details);
         return res.status(400).json({
-          error: "Validation failed",
-          details: errorMessages,
+          success: false,
+          message: "Validation failed",
+          details,
         });
       }
       next(error);

@@ -47,7 +47,7 @@ export const helmetOptions = {
       connectSrc: [
         "'self'",
         "https:",
-        env.serverUrl || "http://localhost:4600",
+        env.serverUrl || "http://localhost:5600",
         "https://api.paystack.co",
         "https://res.cloudinary.com",
       ],

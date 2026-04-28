@@ -1,6 +1,14 @@
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
-import { ErrorSchema, signUpSchema } from "../lib/schemaValidations.js";
+import {
+  ErrorSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  signInSchema,
+  signUpSchema,
+  userSchema,
+  verifyEmailSchema,
+} from "../lib/schemaValidations.js";
 
 const SuccessSchema = z.object({
   success: z.boolean(),
@@ -36,7 +44,7 @@ export const authContract = c.router({
   auth: {
     createUser: {
       method: "POST",
-      path: "/v1/auth/register",
+      path: "/api/v1/auth/register",
       body: signUpSchema,
       responses: {
         201: AuthUserResponseSchema,
@@ -49,107 +57,132 @@ export const authContract = c.router({
       },
       summary: "Create a new user",
     },
-    // loginUser: {
-    //   method: "POST",
-    //   path: "/api/v1/auth/login",
-    //   body: LoginSchema,
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "login a user",
-    // },
-    // forgotPassword: {
-    //   method: "POST",
-    //   path: "/api/v1/auth/forgot-password",
-    //   body: ForgotPasswordSchema,
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "forgot password",
-    // },
-    // resetPassword: {
-    //   method: "POST",
-    //   path: "/api/v1/auth/reset-password",
-    //   body: ResetPasswordSchema,
-    //   query: z.object({
-    //     token: z.string(),
-    //   }),
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "reset password",
-    // },
-    // getSession: {
-    //   method: "GET",
-    //   path: "/api/v1/auth/session",
-    //   responses: {
-    //     200: UserSchema,
-    //     400: ErrorSchema,
-    //     401: ErrorSchema,
-    //     403: ErrorSchema,
-    //     404: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "Get current user session",
-    //   validateResponseOnClient: true,
-    //   strictStatusCodes: true,
-    //   metadata: {
-    //     tags: ["Auth"],
-    //   },
-    // },
-    // logOutUser: {
-    //   method: "POST",
-    //   path: "/api/v1/auth/logout",
-    //   body: z.object({}),
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "logout a user",
-    // },
-    // resendEmailVerification: {
-    //   method: "POST",
-    //   path: "/auth/resend-email-verification",
-    //   body: ForgotPasswordSchema,
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     401: ErrorSchema,
-    //     404: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "resend email verification",
-    // },
-    // verifyEmail: {
-    //   method: "GET",
-    //   path: "/api/v1/auth/verify-email",
-    //   query: z.object({
-    //     token: z.string(),
-    //   }),
-    //   responses: {
-    //     200: AuthUserResponseSchema,
-    //     400: ErrorSchema,
-    //     401: ErrorSchema,
-    //     404: ErrorSchema,
-    //     429: ErrorSchema,
-    //     500: ErrorSchema,
-    //   },
-    //   summary: "verify email",
-    // },
-
+    verifyEmail: {
+      method: "POST",
+      path: "/api/v1/auth/verify-email",
+      body: verifyEmailSchema,
+      query: z.object({
+        email: z
+          .string({
+            message: "Email is required",
+          })
+          .trim()
+          .email({
+            message: "Please enter a valid email address",
+          }),
+      }),
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        401: ErrorSchema,
+        404: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "verify email",
+    },
+    loginUser: {
+      method: "POST",
+      path: "/api/v1/auth/login",
+      body: signInSchema,
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "login a user",
+    },
+    getSession: {
+      method: "GET",
+      path: "/api/v1/auth/session",
+      responses: {
+        200: userSchema,
+        400: ErrorSchema,
+        401: ErrorSchema,
+        403: ErrorSchema,
+        404: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "Get current user session",
+      validateResponseOnClient: true,
+      strictStatusCodes: true,
+      metadata: {
+        tags: ["Auth"],
+      },
+    },
+    resendEmailVerification: {
+      method: "POST",
+      path: "/api/v1/auth/resend-email-verification",
+      body: z.object({
+        email: z
+          .string({
+            message: "Email is required",
+          })
+          .trim()
+          .email({
+            message: "Please enter a valid email address",
+          }),
+      }),
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        401: ErrorSchema,
+        404: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "resend email verification",
+    },
+    logOutUser: {
+      method: "POST",
+      path: "/api/v1/auth/logout",
+      body: z.object({}),
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "logout a user",
+    },
+    forgotPassword: {
+      method: "POST",
+      path: "/api/v1/auth/get-password-otp",
+      body: forgotPasswordSchema,
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        401: ErrorSchema,
+        404: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "get password reset otp",
+    },
+    resetPassword: {
+      method: "POST",
+      path: "/api/v1/auth/reset-password",
+      body: resetPasswordSchema,
+      query: z.object({
+        email: z
+          .string({
+            message: "Email is required",
+          })
+          .trim()
+          .email({
+            message: "Please enter a valid email address",
+          }),
+      }),
+      responses: {
+        200: AuthUserResponseSchema,
+        400: ErrorSchema,
+        429: ErrorSchema,
+        500: ErrorSchema,
+      },
+      summary: "reset password",
+    },
     // deleteAccount: {
     //   method: "POST",
     //   path: "/api/v1/auth/delete-account",

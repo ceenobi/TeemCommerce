@@ -10,9 +10,13 @@ export default function Logo({
 }) {
   return (
     <Link to="/" className="flex gap-1 items-center">
-      <Tent className="text-BrightTealBlue" size={24} />
+      <Tent className="text-BrightTealBlue" size={22} />
       {isOpenSidebar && (
-        <span className={`font-bold ${classname}`}>Teem Commerce</span>
+        <h2
+          className={`font-bold ${classname} text-base font-bold text-foreground tracking-tight`}
+        >
+          Teem Commerce
+        </h2>
       )}
     </Link>
   );

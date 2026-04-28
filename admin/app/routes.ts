@@ -16,6 +16,7 @@ export default [
       route("verify-email", "routes/account/verify-email/page.tsx"),
     ]),
   ]),
+  route("logout", "routes/account/logout/page.tsx"),
   layout("routes/dashboard/layout.tsx", [index("routes/dashboard/page.tsx")]),
   layout("routes/onboarding/layout.tsx", [
     ...prefix("onboarding", [

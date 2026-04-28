@@ -3,7 +3,7 @@ import logger from "../config/logger.js";
 import { createTsRestError } from "./tsRestResponse.js";
 
 const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
-  return (async (...args: any[]) => {
+  return (async (...args: Parameters<T>) => {
     try {
       return await fn(...args);
     } catch (error: any) {
@@ -28,8 +28,7 @@ const tryCatchFn = <T extends (...args: any[]) => any>(fn: T): T => {
       logger.error("Error response with message:", errorMessage);
       return createTsRestError(Number(error?.status) || 400, errorMessage, []);
     }
-  }) as unknown as T;
+  }) as T;
 };
 
 export default tryCatchFn;
-

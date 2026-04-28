@@ -31,7 +31,7 @@ export default function Home() {
     <PageWrapper className="py-20 px-4 lg:px-8 space-y-8">
       <PageSection index={0} className="md:flex justify-between items-center">
         <div className="text-CharcoalBlack dark:text-WhiteNeutral">
-          <h1 className="capitalize text-BrightTealBlue text-sm tracking-widest">
+          <h1 className="capitalize font-semibold text-BrightTealBlue text-sm tracking-widest">
             overview
           </h1>
           <h1 className="text-[24px] font-medium truncate uppercase tracking-tight">

@@ -1,6 +1,6 @@
 import type { Route } from "./+types/page";
 import { formFields } from "~/lib/constants";
-import { useFetcher, Form, Link } from "react-router";
+import { useFetcher, Form, Link, useNavigate } from "react-router";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import {
   forgotPasswordSchema,
@@ -11,6 +11,9 @@ import { Mail, ArrowRight, ArrowLeft } from "lucide-react";
 import FormBox from "~/components/ui/formBox";
 import ActionButton from "~/components/ui/actionButton";
 import { PageSection, PageWrapper } from "~/components/ui/pageWrapper";
+import { forgotPasswordApi } from "~/routes/api/auth-route";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,17 +22,24 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+export async function action({ request }: Route.ActionArgs) {
+  const formData = await request.formData();
+  const data = Object.fromEntries(formData) as Record<string, string>;
+  const response = await forgotPasswordApi({
+    validated: forgotPasswordSchema.parse(data),
+  });
+  return response;
+}
+
 export default function ForgotPassword() {
   const form = useForm<ForgotPasswordFormSchema>({
     resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: "",
-    },
   });
   const filterFields = formFields.filter((field) =>
     ["email"].includes(field.name),
   );
   const fetcher = useFetcher();
+  const navigate = useNavigate();
   const isSubmitting = fetcher.state === "submitting";
 
   const onSubmit: SubmitHandler<ForgotPasswordFormSchema> = async (
@@ -40,16 +50,30 @@ export default function ForgotPassword() {
       action: `/account/forgot-password`,
     });
   };
+
+  useEffect(() => {
+    if (!fetcher.data || fetcher.state !== "idle") return;
+    const { status, body } = fetcher.data as any;
+    if (!body) return;
+    if (status !== 200) {
+      toast.error(body.message || "Failed to send reset otp code");
+      return;
+    }
+    const message = body.message || "Reset otp code sent successfully";
+    toast.success(message);
+    navigate(`/account/reset-password?email=${form.getValues("email")}`);
+  }, [fetcher.data, fetcher.state, navigate, form]);
+
   return (
     <PageWrapper>
       <PageSection index={0}>
-        <div className="max-w-sm mx-auto">
-          <div className="bg-white dark:bg-DarkBlue p-6 border shadow space-y-4">
+        <div className="max-w-sm mx-auto min-h-screen flex items-center justify-center md:py-20 lg:py-0">
+          <div className="rounded-sm bg-white dark:bg-DarkBlue p-6 border shadow space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold">Forgot Password</h1>
               <p className="text-muted-foreground text-sm">
                 Enter the email address associated with your account and we'll
-                send you a link to reset your password.
+                send you a code to reset your password.
               </p>
             </div>
             <Form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
@@ -64,18 +88,18 @@ export default function ForgotPassword() {
               <ActionButton
                 text={
                   <>
-                    Send Reset Link <ArrowRight />
+                    Get Reset Code <ArrowRight />
                   </>
                 }
                 type="submit"
                 loading={isSubmitting}
                 size="lg"
-                classname="w-full font-medium uppercase bg-BrightTealBlue py-[22px] hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
+                classname="w-full font-medium uppercase bg-BrightTealBlue py-5.5 hover:bg-BrightTealBlue dark:bg-BrightTealBlue dark:text-white"
               />
             </Form>
-            <div className="mt-4 w-full h-px bg-gray-200 dark:bg-muted-foreground" />
+            <div className="mt-4 w-full h-px bg-gray-200 dark:bg-WhiteNeutral/20" />
             <div className="flex items-center justify-center gap-2 text-center text-sm text-BrightTealBlue ">
-              <ArrowLeft />
+              <ArrowLeft size={18} />
               <Link to="/account/signin" className="font-semibold">
                 Back to Sign In
               </Link>

@@ -64,8 +64,8 @@ export const errorHandler = (
     timestamp: new Date().toISOString(),
     path: req.originalUrl,
   };
-
-  res.status(statusCode).json(response);
+  const tsRestError = createTsRestError(statusCode, error.message, []);
+  res.status(statusCode).json(tsRestError.body);
 };
 
 // 404 Not Found handler

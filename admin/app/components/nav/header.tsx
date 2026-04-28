@@ -18,8 +18,10 @@ export default function Header({ isOpenSidebar }: headerProps) {
         isOpenSidebar ? "lg:w-[calc(100%-250px)]" : "lg:w-[calc(100%-60px)]",
       )}
     >
-      <div className="lg:max-w-full mx-auto flex justify-between items-center py-2.25 px-4 lg:px-8">
-        <h1 className="hidden md:block truncate text-sm">Store Manager</h1>
+      <div className="lg:container mx-auto flex justify-between items-center py-2.25 px-4 lg:px-8">
+        <h1 className="hidden md:block truncate text-sm text-muted-foreground font-medium tracking-light">
+          Store Manager
+        </h1>
         <div className="md:hidden">
           <Logo classname="text-2xl" />
         </div>

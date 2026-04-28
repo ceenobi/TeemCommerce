@@ -6,6 +6,7 @@ import { connectToDB } from "./db.server.js";
 import { env } from "./keys.js";
 import emailService from "../email/send-email.js";
 import logger from "./logger.js";
+import User from "../models/user.js";
 
 await connectToDB();
 
@@ -34,7 +35,6 @@ export const auth = betterAuth({
     onPasswordReset: async ({ user }, request) => {
       //await emailService.sendResetPasswordSuccessEmail(user as User);
     },
-    resetPasswordTokenExpiresIn: 60 * 15, // 15 minutes
     asResponse: true,
   },
   emailVerification: {
@@ -101,11 +101,9 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       async sendVerificationOTP({ email, otp, type }, request) {
-        const db = mongoose.connection.db as any;
-
         const emailTask = (async () => {
           try {
-            const user = await db.collection("users").findOne({ email });
+            const user = await User.findOne({ email }).lean();
             if (!user) {
               logger.warn(`OTP requested for non-existent user: ${email}`);
               return;
@@ -128,6 +126,7 @@ export const auth = betterAuth({
         }
       },
       sendVerificationOnSignUp: true,
+      expiresIn: 600,
     }),
   ],
 });

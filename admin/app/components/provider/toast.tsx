@@ -7,7 +7,7 @@ const ToastProvider = () => {
   return (
     <Toaster
       theme={theme as any}
-      position="bottom-center"
+      position="top-right"
       toastOptions={{
         className: "font-sans",
         style: {

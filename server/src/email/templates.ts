@@ -142,16 +142,16 @@ export const verifyAccountTemplate = (name: string, otp: string) => `
               <div class="logo">TEEMCOMMERCE</div>
             </div>
             <div class="content">
-              <h1 class="title">Welcome Home</h1>
+              <h1 class="title">Welcome Vendor!</h1>
               <p class="welcome-text">Hello ${name},</p>
               <p class="text">
-                Welcome to Teem Commerce! We're thrilled to have you join our multi-tenant marketplace. To ensure the security of your account, please verify your email address.
+                Welcome to Teem Commerce! We're thrilled to have you join our marketplace. To ensure the security of your account, please verify your email address.
               </p>
               
               <div class="otp-container">
                 <p style="margin-bottom: 12px; font-weight: 600; text-transform: uppercase; font-size: 14px; color: #64748b;">Your Verification Code</p>
                 <h2 class="otp-code">${otp}</h2>
-                <p class="expiry-text">This code will expire in 30 minutes.</p>
+                <p class="expiry-text">This code will expire in 10 minutes.</p>
               </div>
 
               <p class="text" style="font-size: 14px;">
@@ -186,7 +186,7 @@ export const forgotPasswordTemplate = (name: string, otp: string) => `
        <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Verify Your Email - Teem Commerce</title>
+        <title>Reset Password - Teem Commerce</title>
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
           
@@ -326,13 +326,13 @@ export const forgotPasswordTemplate = (name: string, otp: string) => `
               <h1 class="title">Reset Password</h1>
               <p class="welcome-text">Hello ${name},</p>
               <p class="text">
-                You are receiving this email because you requested to reset your password. Please click the button below to reset your password.
+                You are receiving this email because you requested to reset your password.
               </p>
               
               <div class="otp-container">
                 <p style="margin-bottom: 12px; font-weight: 600; text-transform: uppercase; font-size: 14px; color: #64748b;">Your Reset Password Code</p>
                 <h2 class="otp-code">${otp}</h2>
-                <p class="expiry-text">This code will expire in 30 minutes.</p>
+                <p class="expiry-text">This code will expire in 10 minutes.</p>
               </div>
 
               <p class="text" style="font-size: 14px;">

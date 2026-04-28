@@ -15,10 +15,12 @@ export const ErrorSchema = z.object({
 
 export const signInSchema = z.object({
   email: z.email({
-    message: "Please enter a valid email address",
+    message: "Email is required",
   }),
   password: z
-    .string()
+    .string({
+      message: "Password is required",
+    })
     .min(8, {
       message: "Password must be at least 8 characters long",
     })
@@ -30,19 +32,28 @@ export const signInSchema = z.object({
     })
     .regex(/[!@#$%^&*(),.?":{}|<>]/, {
       message: "Password must contain at least one special character",
+    })
+    .regex(/\d/, {
+      message: "Password must contain at least one number",
     }),
 });
-export type SigninFormSchema = z.infer<typeof signInSchema>;
+export type SignInFormSchema = z.infer<typeof signInSchema>;
 
 export const signUpSchema = z.object({
-  name: z.string().min(3, {
-    message: "Full name must be at least 3 characters long",
-  }),
+  name: z
+    .string({
+      message: "Full name is required",
+    })
+    .min(3, {
+      message: "Full name must be at least 3 characters long",
+    }),
   email: z.email({
-    message: "Please enter a valid email address",
+    message: "Email is required",
   }),
   password: z
-    .string()
+    .string({
+      message: "Password is required",
+    })
     .min(8, {
       message: "Password must be at least 8 characters long",
     })
@@ -54,6 +65,9 @@ export const signUpSchema = z.object({
     })
     .regex(/[!@#$%^&*(),.?":{}|<>]/, {
       message: "Password must contain at least one special character",
+    })
+    .regex(/\d/, {
+      message: "Password must contain at least one number",
     }),
 });
 
@@ -61,15 +75,24 @@ export type SignupFormSchema = z.infer<typeof signUpSchema>;
 
 export const forgotPasswordSchema = z.object({
   email: z.email({
-    message: "Please enter a valid email address",
+    message: "Email is required",
   }),
 });
 
 export type ForgotPasswordFormSchema = z.infer<typeof forgotPasswordSchema>;
 
 export const resetPasswordSchema = z.object({
+  otp: z
+    .string({
+      message: "OTP is required",
+    })
+    .length(6, {
+      message: "OTP must be 6 digits",
+    }),
   newPassword: z
-    .string()
+    .string({
+      message: "Password is required",
+    })
     .min(8, {
       message: "Password must be at least 8 characters long",
     })
@@ -81,10 +104,10 @@ export const resetPasswordSchema = z.object({
     })
     .regex(/[!@#$%^&*(),.?":{}|<>]/, {
       message: "Password must contain at least one special character",
+    })
+    .regex(/\d/, {
+      message: "Password must contain at least one number",
     }),
-  confirmPassword: z.string().min(8, {
-    message: "Confirm password must be at least 8 characters long",
-  }),
 });
 
 export type ResetPasswordFormSchema = z.infer<typeof resetPasswordSchema>;
@@ -127,5 +150,82 @@ export const onboardingShippingSchema = z.object({
   freeShippingThreshold: z.string().min(1, {
     message: "Please enter a free shipping threshold",
   }),
+  activeRegions: z.array(z.string()).default([]),
+  stripeEnabled: z.boolean().default(false),
+  paypalEnabled: z.boolean().default(false),
 });
 export type OnboardingShippingSchema = z.infer<typeof onboardingShippingSchema>;
+
+export const kycSchema = z.object({
+  taxId: z.string().optional(),
+  businessRegistrationNumber: z.string().optional(),
+  verificationType: z.enum(["NIN", "Passport", "BusinessRegistration"]),
+  documents: z
+    .array(
+      z.object({
+        documentUrl: z.string(),
+        documentType: z.string(),
+      }),
+    )
+    .min(1, "At least one document is required"),
+});
+export type KycSchema = z.infer<typeof kycSchema>;
+
+export const verifyEmailSchema = z.object({
+  otp: z
+    .string({
+      message: "OTP is required",
+    })
+    .length(6, {
+      message: "OTP must be 6 digits",
+    }),
+});
+export type VerifyEmailTypeSchema = z.infer<typeof verifyEmailSchema>;
+
+export const userSchema = z.preprocess(
+  (arg: any) => {
+    if (typeof arg === "object" && arg !== null) {
+      return {
+        ...arg,
+        id: arg.id || arg._id,
+      };
+    }
+    return arg;
+  },
+  z.object({
+    id: z.any(),
+    email: z.email(),
+    name: z.string(),
+    role: z.string(),
+    vendorId: z.string(),
+    emailVerified: z.boolean(),
+    createdAt: z.coerce.date().optional(),
+    updatedAt: z.coerce.date().optional(),
+    isOnboarded: z.boolean().optional(),
+    phone: z
+      .string()
+      .refine(
+        (num) => num === "" || /^\+\d{10,15}$/.test(num),
+        "Invalid phone number",
+      )
+      .optional(),
+  }),
+);
+export type UserData = z.infer<typeof userSchema>;
+
+export const UploadSchema = z.object({
+  files: z.array(z.string()).min(1, {
+    message: "At least one file is required",
+  }),
+  folder: z.string().min(1, {
+    message: "Folder is required",
+  }),
+});
+export type UploadFormData = z.infer<typeof UploadSchema>;
+
+export const DeleteMediaSchema = z.object({
+  publicIds: z.array(z.string()).min(1, {
+    message: "At least one public ID is required",
+  }),
+});
+export type DeleteMediaData = z.infer<typeof DeleteMediaSchema>;

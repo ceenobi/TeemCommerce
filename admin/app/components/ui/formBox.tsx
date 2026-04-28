@@ -8,13 +8,7 @@ import type {
 import { Controller } from "react-hook-form";
 import { Suspense, lazy, useEffect, useState } from "react";
 import { type E164Number } from "libphonenumber-js/core";
-import {
-  Field,
-  FieldLabel,
-  FieldError,
-  FieldSet,
-  FieldLegend,
-} from "./field";
+import { Field, FieldLabel, FieldError, FieldSet, FieldLegend } from "./field";
 import {
   Select,
   SelectContent,
@@ -38,6 +32,7 @@ import {
   CommandItem,
   CommandList,
 } from "./command";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "./input-otp";
 
 // Lazy load the SimpleMDE component to avoid SSR issues
 const SimpleMDE = lazy(() => import("react-simplemde-editor"));
@@ -260,6 +255,24 @@ export default function FormBox<TFormData extends FieldValues = FieldValues>({
             className={`p-1.5 text-sm border bg-inherit rounded-sm focus:outline-blue-500 focus:ring-blue-500 ${errors ? "border-red-500" : ""}`}
           />
         );
+      case "otp":
+        return (
+          <InputOTP
+            maxLength={6}
+            value={field.value ?? ""}
+            onChange={field.onChange}
+            className={cn(errors ? "aria-invalid:border-destructive" : "")}
+          >
+            <InputOTPGroup className="space-x-2">
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+        );
       default:
         return (
           <InputGroup className="bg-gray-100 py-5">
@@ -324,7 +337,7 @@ export default function FormBox<TFormData extends FieldValues = FieldValues>({
                   className={cn(
                     "mb-1 text-gray-800 dark:text-gray-200 font-medium uppercase",
                     form.formState.errors[item.name as Path<TFormData>]
-                      ? "text-red-500"
+                      ? "text-red-500 dark:text-red-600"
                       : "",
                   )}
                 >
@@ -341,7 +354,7 @@ export default function FormBox<TFormData extends FieldValues = FieldValues>({
                     index,
                   )}
                 </Field>
-                <FieldError className="text-xs">
+                <FieldError className="text-xs text-red-500 dark:text-red-600">
                   {
                     (
                       form.formState.errors[item.name as Path<TFormData>] as

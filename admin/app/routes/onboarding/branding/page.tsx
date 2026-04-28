@@ -1,7 +1,13 @@
 import type { Route } from "../+types/page";
 import { useState, useRef } from "react";
 import { Link, useFetcher, Form } from "react-router";
-import { ArrowRight, ArrowLeft, Upload, ImageIcon, Palette } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Upload,
+  ImageIcon,
+  Palette,
+} from "lucide-react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -20,7 +26,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-
+import { useFile } from "~/hooks/useFile";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -46,7 +52,13 @@ const PRESET_COLORS = [
 ];
 
 export default function OnboardingBranding() {
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const {
+    selectedFiles: logoPreview,
+    setSelectedFiles: setLogoPreview,
+    handleFiles: handleLogoUpload,
+  } = useFile({
+    limit: 1,
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<OnboardingBrandingSchema>({
@@ -70,16 +82,16 @@ export default function OnboardingBranding() {
     });
   };
 
-  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setLogoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onloadend = () => {
+  //       setLogoPreview(reader.result as string);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   return (
     <PageWrapper>
@@ -93,8 +105,9 @@ export default function OnboardingBranding() {
             <h1 className="text-3xl font-bold text-foreground tracking-tight">
               Branding & Design.
             </h1>
-            <p className="text-sm text-muted-foreground max-w-[540px] leading-relaxed">
-              Craft the visual identity of your storefront. Upload your logo and define the palette that represents your brand.
+            <p className="text-sm text-muted-foreground max-w-135 leading-relaxed">
+              Craft the visual identity of your storefront. Upload your logo and
+              define the palette that represents your brand.
             </p>
           </div>
 
@@ -124,18 +137,25 @@ export default function OnboardingBranding() {
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {logoPreview ? (
-                      <img
-                        src={logoPreview}
-                        alt="Logo preview"
-                        className="max-w-[120px] max-h-[120px] object-contain"
-                      />
+                      logoPreview.map((file, index) => (
+                        <img
+                          key={index}
+                          src={file.preview as string}
+                          alt={"brand image"}
+                          className="max-w-30 max-h-30 object-contain"
+                        />
+                      ))
                     ) : (
                       <>
                         <div className="w-12 h-12 rounded-full bg-BrightTealBlue flex items-center justify-center text-white mb-3">
                           <Upload size={20} />
                         </div>
-                        <p className="text-sm font-medium text-foreground">Click to upload or drag and drop</p>
-                        <p className="text-xs text-muted-foreground mt-1">SVG, PNG, or JPG (max. 5MB)</p>
+                        <p className="text-sm font-medium text-foreground">
+                          Click to upload or drag and drop
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          SVG, PNG, or JPG (max. 5MB)
+                        </p>
                       </>
                     )}
                   </div>
@@ -154,7 +174,10 @@ export default function OnboardingBranding() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                  <Form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
+                  >
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-4">
                         <FormBox
@@ -163,15 +186,17 @@ export default function OnboardingBranding() {
                           classname="w-full"
                           icon={true}
                           inputIcon={
-                            <div 
-                              className="w-4 h-4 rounded-full border border-border" 
-                              style={{ background: primaryColor }} 
+                            <div
+                              className="w-4 h-4 rounded-full border border-border"
+                              style={{ background: primaryColor }}
                             />
                           }
                           inputIconPosition="inline-start"
                         />
                         <div>
-                          <p className="text-[0.6875rem] font-medium uppercase tracking-widest text-muted-foreground mb-3">Presets</p>
+                          <p className="text-[0.6875rem] font-medium uppercase tracking-widest text-muted-foreground mb-3">
+                            Presets
+                          </p>
                           <div className="flex flex-wrap gap-2">
                             {PRESET_COLORS.map((color) => (
                               <button
@@ -179,10 +204,13 @@ export default function OnboardingBranding() {
                                 type="button"
                                 className={cn(
                                   "w-8 h-8 rounded-full transition-transform hover:scale-110",
-                                  primaryColor === color && "ring-2 ring-offset-2 ring-foreground"
+                                  primaryColor === color &&
+                                    "ring-2 ring-offset-2 ring-foreground",
                                 )}
                                 style={{ background: color }}
-                                onClick={() => form.setValue("brandPrimary", color)}
+                                onClick={() =>
+                                  form.setValue("brandPrimary", color)
+                                }
                               />
                             ))}
                           </div>
@@ -196,33 +224,41 @@ export default function OnboardingBranding() {
                           classname="w-full"
                           icon={true}
                           inputIcon={
-                            <div 
-                              className="w-4 h-4 rounded-full border border-border" 
-                              style={{ background: secondaryColor }} 
+                            <div
+                              className="w-4 h-4 rounded-full border border-border"
+                              style={{ background: secondaryColor }}
                             />
                           }
                           inputIconPosition="inline-start"
                         />
                         {/* Native color pickers for custom selection */}
                         <div className="flex gap-4">
-                           <div className="flex flex-col gap-1.5 flex-1">
-                              <span className="text-[10px] uppercase text-muted-foreground font-bold">Pick Primary</span>
-                              <input 
-                                type="color" 
-                                value={primaryColor} 
-                                onChange={(e) => form.setValue("brandPrimary", e.target.value)}
-                                className="w-full h-8 rounded border border-border bg-transparent p-0 cursor-pointer"
-                              />
-                           </div>
-                           <div className="flex flex-col gap-1.5 flex-1">
-                              <span className="text-[10px] uppercase text-muted-foreground font-bold">Pick Secondary</span>
-                              <input 
-                                type="color" 
-                                value={secondaryColor} 
-                                onChange={(e) => form.setValue("brandSecondary", e.target.value)}
-                                className="w-full h-8 rounded border border-border bg-transparent p-0 cursor-pointer"
-                              />
-                           </div>
+                          <div className="flex flex-col gap-1.5 flex-1">
+                            <span className="text-[10px] uppercase text-muted-foreground font-bold">
+                              Pick Primary
+                            </span>
+                            <input
+                              type="color"
+                              value={primaryColor}
+                              onChange={(e) =>
+                                form.setValue("brandPrimary", e.target.value)
+                              }
+                              className="w-full h-8 rounded border border-border bg-transparent p-0 cursor-pointer"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1.5 flex-1">
+                            <span className="text-[10px] uppercase text-muted-foreground font-bold">
+                              Pick Secondary
+                            </span>
+                            <input
+                              type="color"
+                              value={secondaryColor}
+                              onChange={(e) =>
+                                form.setValue("brandSecondary", e.target.value)
+                              }
+                              className="w-full h-8 rounded border border-border bg-transparent p-0 cursor-pointer"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -236,7 +272,11 @@ export default function OnboardingBranding() {
                         Back
                       </Link>
                       <ActionButton
-                        text={<>Save & Continue <ArrowRight /></>}
+                        text={
+                          <>
+                            Save & Continue <ArrowRight />
+                          </>
+                        }
                         type="submit"
                         loading={isSubmitting}
                         size="lg"
@@ -253,21 +293,41 @@ export default function OnboardingBranding() {
               <p className="text-[0.6875rem] font-bold uppercase tracking-widest text-center text-muted-foreground">
                 Live Preview
               </p>
-              <div className="w-full aspect-2/3 max-w-[280px] mx-auto rounded-[2rem] border-[6px] border-muted bg-card shadow-2xl overflow-hidden flex flex-col">
+              <div className="w-full aspect-2/3 max-w-70 mx-auto rounded-[2rem] border-[6px] border-muted bg-card shadow-2xl overflow-hidden flex flex-col">
                 <div className="p-6 flex flex-col items-center gap-3">
-                  <div 
+                  <div
                     className="w-16 h-16 rounded-xl flex items-center justify-center overflow-hidden"
-                    style={{ background: logoPreview ? 'transparent' : `${primaryColor}15` }}
+                    style={{
+                      background: logoPreview
+                        ? "transparent"
+                        : `${primaryColor}15`,
+                    }}
                   >
                     {logoPreview ? (
-                      <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
+                      logoPreview.map((file, index) => (
+                        <img
+                          key={index}
+                          src={file.preview as string}
+                          alt={"brand image"}
+                          className="w-full h-full object-contain"
+                        />
+                      ))
                     ) : (
-                      <span className="text-2xl font-bold" style={{ color: primaryColor }}>B</span>
+                      <span
+                        className="text-2xl font-bold"
+                        style={{ color: primaryColor }}
+                      >
+                        B
+                      </span>
                     )}
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-bold text-foreground">Your Boutique</p>
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Est. 2024</p>
+                    <p className="text-sm font-bold text-foreground">
+                      Your Boutique
+                    </p>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">
+                      Est. 2024
+                    </p>
                   </div>
                 </div>
                 <div className="flex-1 p-4 flex flex-col gap-3">
@@ -276,7 +336,7 @@ export default function OnboardingBranding() {
                     <div className="h-4 w-1/3 bg-muted rounded" />
                     <div className="h-4 w-1/4 bg-muted rounded" />
                   </div>
-                  <div 
+                  <div
                     className="mt-auto p-3 rounded-lg text-center text-[10px] font-bold text-white uppercase tracking-widest"
                     style={{ background: primaryColor }}
                   >

@@ -134,6 +134,12 @@ export const formFields = [
     type: "textarea",
     placeholder: "Enter short description about the paymnent",
   },
+  {
+    name: "otp",
+    label: "Enter OTP",
+    type: "otp",
+    placeholder: "Enter OTP",
+  },
 ];
 
 export const onboardingStoreFields = [

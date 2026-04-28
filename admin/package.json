@@ -10,8 +10,6 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
-    "@fontsource-variable/lexend": "^5.2.11",
-    "@fontsource/inter": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@react-router/node": "7.14.0",
     "@react-router/serve": "7.14.0",
@@ -23,6 +21,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "easymde": "^2.20.0",
+    "input-otp": "^1.4.2",
     "isbot": "^5.1.36",
     "lucide-react": "^1.8.0",
     "radix-ui": "^1.4.3",

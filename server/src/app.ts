@@ -19,6 +19,10 @@ import {
 } from "./middleware/rateLimit.middleware.js";
 import { authContract } from "./contract/auth.contract.js";
 import { getAuthRouter } from "./routes/auth.routes.js";
+import { uploadContract } from "./contract/upload.contract.js";
+import { getUploadRouter } from "./routes/upload.routes.js";
+import { vendorContract } from "./contract/vendor.contract.js";
+import { getVendorRouter } from "./routes/vendor.routes.js";
 
 declare global {
   namespace Express {
@@ -137,7 +141,7 @@ app.use(
 );
 // Logging middleware in development
 if (env.nodeEnv === "development") {
-  app.use(morgan("combined"));
+  app.use(morgan("dev"));
 }
 
 // Request time middleware
@@ -146,11 +150,25 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
+// Apply strict limiter to sensitive v1 routes
+app.use("/api/v1/auth", strictLimiter);
+
 createExpressEndpoints(authContract, getAuthRouter(), app, {
   jsonQuery: true,
   responseValidation: true,
 });
 
+createExpressEndpoints(uploadContract, getUploadRouter(), app, {
+  jsonQuery: true,
+  responseValidation: true,
+});
+
+createExpressEndpoints(vendorContract, getVendorRouter(), app, {
+  jsonQuery: true,
+  responseValidation: true,
+});
+
+// app.use("/api/v1/auth", strictLimiter);
 // Sentry error handler must be before any other error middleware
 Sentry.setupExpressErrorHandler(app);
 // Handle 404
